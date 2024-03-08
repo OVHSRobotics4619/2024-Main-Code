@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
@@ -29,6 +30,7 @@ import frc.robot.Constants;
 
 import frc.robot.commands.shooter.*;
 import frc.robot.commands.apriltags.TurnToTag;
+import frc.robot.commands.apriltags.TurnToTag2;
 import frc.robot.commands.climber.*;
 
 
@@ -58,6 +60,14 @@ public class RobotContainer
   private final Command demoPathCommand = drivebase.getAutonomousCommand("hAWK PATH", true);
 
   private final TurnToTag pointToTag = new TurnToTag(camera, drivebase, 0);
+
+  // point to tag V2 code starts here
+
+  private PIDController turnController = new PIDController(.1, 0, 0);
+
+  private PIDController forwardController = new PIDController(.1, 0, 0);
+
+  private TurnToTag2 pointToTag2 = new TurnToTag2(camera, drivebase, turnController, forwardController);
 
   // CommandJoystick rotationController = new CommandJoystick(1);
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -138,7 +148,7 @@ public class RobotContainer
     rightTrigger.onTrue(autoShoot);                                         // done
     
     new JoystickButton(driverXbox, Constants.OIConstants.START)             // done
-                      .onTrue(pointToTag);
+                      .whileTrue(pointToTag2);
 
     new JoystickButton(driverXbox, Constants.OIConstants.BACK)              // done
                       .onTrue((new InstantCommand(drivebase::zeroGyro)));
