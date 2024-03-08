@@ -55,6 +55,8 @@ public class RobotContainer
   private final PhotonCamera camera = new PhotonCamera("Cookie");
   private final AprilCommand aprilCommand = new AprilCommand(camera, drivebase);
 
+  private final Command demoPathCommand = drivebase.getAutonomousCommand("hAWK PATH", true);
+
   private final TurnToTag pointToTag = new TurnToTag(camera, drivebase, 0);
 
   // CommandJoystick rotationController = new CommandJoystick(1);
@@ -157,6 +159,9 @@ public class RobotContainer
                       .onTrue(new InstantCommand(climber::climbArmUp))
                       .onFalse(new InstantCommand(climber::stopClimb));
 
+    new JoystickButton(driverXbox, Constants.OIConstants.R_BUMPER)          // test
+                      .whileTrue(demoPathCommand);
+
   }
 
   /**
@@ -167,7 +172,7 @@ public class RobotContainer
   public Command getAutonomousCommand()
   {
     // An example command will be run in autonomous
-    return drivebase.getAutonomousCommand("New Path", true);
+    return drivebase.getAutonomousCommand("Auto Path", true);
   }
 
   public void setDriveMode()
