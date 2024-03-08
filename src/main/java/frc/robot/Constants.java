@@ -111,5 +111,12 @@ public final class Constants
 
     // How close the robot turns to the apriltag before it stops (degrees)
     public static final double TURN_STOP_LIMIT = 1;
+
+    public static final class CameraConstants {
+      public static final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(24);
+      public static final double TARGET_HEIGHT_METERS = Units.inchesToMeters(24);
+      public static final double CAMERA_PITCH_RADIANS = Units.inchesToMeters(24);
+      public static final double GOAL_RANGE_METERS = Units.inchesToMeters(24);
+    }
   }
 }
