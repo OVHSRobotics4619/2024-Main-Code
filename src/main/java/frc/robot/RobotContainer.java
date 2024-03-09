@@ -43,8 +43,10 @@ public class RobotContainer
 {
 
   // The robot's subsystems and commands are defined here...
-  private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
-                                                                         "swerve/neo"));
+
+  private final PhotonCamera camera = new PhotonCamera("Cookie");
+
+  private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
 
   private final ShooterSubsystem shooter = new ShooterSubsystem();
   private final ClimberSubsystem climber = new ClimberSubsystem();
@@ -54,7 +56,6 @@ public class RobotContainer
 
   private final Climb autoClimb = new Climb(climber);
 
-  private final PhotonCamera camera = new PhotonCamera("Cookie");
   private final AprilCommand aprilCommand = new AprilCommand(camera, drivebase);
 
   private final Command demoPathCommand = drivebase.getAutonomousCommand("hAWK PATH", true);

@@ -426,6 +426,11 @@ public class SwerveSubsystem extends SubsystemBase
     swerveDrive.addVisionMeasurement(new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp());
   }
 
+  public void addVisionReading(Pose2d position)
+  {
+    swerveDrive.addVisionMeasurement(position, Timer.getFPGATimestamp());
+  }
+
   public void driveWithVision(double rotation) {
     // Your YAGSL Swerve drive control logic based on vision targets
     // Adjust the swerve drive motors accordingly
