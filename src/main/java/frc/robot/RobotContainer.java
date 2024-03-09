@@ -19,19 +19,18 @@ import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteFieldDrive;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
-import frc.robot.commands.swervedrive.drivebase.AprilCommand;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import java.io.File;
+
 import org.photonvision.PhotonCamera;
-
-import frc.robot.Constants;
-
 import frc.robot.commands.shooter.*;
-import frc.robot.commands.apriltags.TurnToTag;
 import frc.robot.commands.apriltags.TurnToTag2;
-import frc.robot.commands.climber.*;
+
+//import frc.robot.commands.apriltags.TurnToTag;
+//import frc.robot.commands.swervedrive.drivebase.AprilCommand;
+//import frc.robot.commands.climber.*;
 
 
 /**
@@ -51,16 +50,17 @@ public class RobotContainer
   private final ShooterSubsystem shooter = new ShooterSubsystem();
   private final ClimberSubsystem climber = new ClimberSubsystem();
 
-  private final Intake autoIntake = new Intake(shooter);
   private final Shoot autoShoot = new Shoot(shooter);
 
+  // unused commands:
+  /*
+  private final Intake autoIntake = new Intake(shooter);
   private final Climb autoClimb = new Climb(climber);
-
   private final AprilCommand aprilCommand = new AprilCommand(camera, drivebase);
+  private final TurnToTag pointToTag = new TurnToTag(camera, drivebase, 0);
+  */
 
   private final Command demoPathCommand = drivebase.getAutonomousCommand("hAWK PATH", true);
-
-  private final TurnToTag pointToTag = new TurnToTag(camera, drivebase, 0);
 
   // point to tag V2 code starts here
 
@@ -105,6 +105,7 @@ public class RobotContainer
                                                                                                       Constants.OperatorConstants.LEFT_X_DEADBAND),
                                                                          () -> driverXbox.getRawAxis(2));
 
+    @SuppressWarnings("unused")
     AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
                                                                       () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
                                                                                                 Constants.OperatorConstants.LEFT_Y_DEADBAND),
@@ -116,13 +117,16 @@ public class RobotContainer
                                                                       driverXbox::getAButtonPressed, 
                                                                       driverXbox::getXButtonPressed, 
                                                                       driverXbox::getBButtonPressed);
-
+    
+    @SuppressWarnings("unused")
     TeleopDrive simClosedFieldRel = new TeleopDrive(drivebase,
                                                     () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
                                                                                  Constants.OperatorConstants.LEFT_Y_DEADBAND),
                                                     () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
                                                                                  Constants.OperatorConstants.LEFT_X_DEADBAND),
                                                     () -> driverXbox.getRawAxis(2), () -> true);
+
+    @SuppressWarnings("unused")
     TeleopDrive closedFieldRel = new TeleopDrive(
         drivebase,
         () -> MathUtil.applyDeadband(driverController.getRawAxis(1), Constants.OperatorConstants.LEFT_Y_DEADBAND),
