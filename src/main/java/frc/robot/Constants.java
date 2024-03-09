@@ -138,7 +138,7 @@ public final class Constants
       
       // Cam mounted facing forward, half a meter forward of center, half a meter up from center.
       public static final Transform3d kRobotToCam =
-            new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0));
+            new Transform3d(new Translation3d(Units.inchesToMeters(11), Units.inchesToMeters(1.5), Units.inchesToMeters(12.5)), new Rotation3d(0, 0, 0));
     }
   }
 }
