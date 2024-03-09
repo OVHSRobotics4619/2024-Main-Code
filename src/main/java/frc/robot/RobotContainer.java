@@ -44,7 +44,7 @@ public class RobotContainer
 
   // The robot's subsystems and commands are defined here...
 
-  private final PhotonCamera camera = new PhotonCamera("Cookie");
+  private final PhotonCamera camera = new PhotonCamera(Constants.AprilTags.CameraConstants.kCameraName);
 
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
 

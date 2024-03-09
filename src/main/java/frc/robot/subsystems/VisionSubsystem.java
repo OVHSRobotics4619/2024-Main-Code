@@ -7,34 +7,55 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
 public class VisionSubsystem extends SubsystemBase {
 
-  AprilTagFieldLayout aprilTagFieldLayout;
   PhotonCamera cam;
-  Transform3d robotToCam;
   PhotonPoseEstimator photonPoseEstimator;
 
   public VisionSubsystem(PhotonCamera camera) {
 
-    // The field from AprilTagFields will be different depending on the game.
-    this.aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
-
     //Forward Camera
     this.cam = camera;
-    this.robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0)); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
-    
-    // Construct PhotonPoseEstimator
-    this.photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, cam, robotToCam);
 
+    // Construct PhotonPoseEstimator
+    this.photonPoseEstimator = new PhotonPoseEstimator(Constants.AprilTags.kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cam, Constants.AprilTags.CameraConstants.kRobotToCam);
+
+  }
+
+  public Matrix<N3, N1> getEstimationStdDevs(Pose2d estimatedPose) {
+    var estStdDevs = Constants.AprilTags.kSingleTagStdDevs;
+    var targets = this.cam.getLatestResult().getTargets();
+    int numTags = 0;
+    double avgDist = 0;
+    for (var tgt : targets) {
+        var tagPose = photonPoseEstimator.getFieldTags().getTagPose(tgt.getFiducialId());
+        if (tagPose.isEmpty()) continue;
+        numTags++;
+        avgDist +=
+                tagPose.get().toPose2d().getTranslation().getDistance(estimatedPose.getTranslation());
+    }
+    if (numTags == 0) return estStdDevs;
+    avgDist /= numTags;
+    // Decrease std devs if multiple targets are visible
+    if (numTags > 1) estStdDevs = Constants.AprilTags.kMultiTagStdDevs;
+    // Increase std devs based on (average) distance
+    if (numTags == 1 && avgDist > 4)
+        estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+    else estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / 30));
+
+    return estStdDevs;
   }
 
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
@@ -45,9 +66,14 @@ public class VisionSubsystem extends SubsystemBase {
   public void updateGlobalPosition(SwerveSubsystem swerve) {
     Pose2d previousPose2d = swerve.getPose();
     Optional<EstimatedRobotPose> estimatedPosition = getEstimatedGlobalPose(previousPose2d);
-    if(estimatedPosition != null) {
-      //swerve.addVisionReading(estimatedPosition.estimatedPose);
-    }
+    
+    estimatedPosition.ifPresent(est -> {
+      var estPose = est.estimatedPose.toPose2d();
+      // Change our trust in the measurement based on the tags we can see
+      Matrix<N3, N1> estStdDevs = getEstimationStdDevs(estPose);
+
+      swerve.addVisionReading(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+    });
   }
 
 }
