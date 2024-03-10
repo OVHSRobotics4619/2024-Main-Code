@@ -59,6 +59,8 @@ public class TeleopDrive extends Command
     SmartDashboard.putNumber("vX", xVelocity);
     SmartDashboard.putNumber("vY", yVelocity);
     SmartDashboard.putNumber("omega", angVelocity);
+    SmartDashboard.putNumber("Robot Position X", swerve.getPose().getX());
+    SmartDashboard.putNumber("Robot Position Y", swerve.getPose().getY());
 
     // Drive using raw values.
     swerve.drive(new Translation2d(xVelocity * swerve.maximumSpeed, yVelocity * swerve.maximumSpeed),
