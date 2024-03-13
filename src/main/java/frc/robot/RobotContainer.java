@@ -27,6 +27,7 @@ import java.io.File;
 import org.photonvision.PhotonCamera;
 import frc.robot.commands.shooter.*;
 import frc.robot.commands.apriltags.TurnToTag2;
+import frc.robot.subsystems.VisionSubsystem;
 
 //import frc.robot.commands.apriltags.TurnToTag;
 //import frc.robot.commands.swervedrive.drivebase.AprilCommand;
@@ -49,8 +50,11 @@ public class RobotContainer
 
   private final ShooterSubsystem shooter = new ShooterSubsystem();
   private final ClimberSubsystem climber = new ClimberSubsystem();
+  private final VisionSubsystem vision = new VisionSubsystem(camera);
 
   private final Shoot autoShoot = new Shoot(shooter);
+
+  private final InstantCommand updatePositionWithAprilTags = new InstantCommand(() -> vision.updateGlobalPosition(drivebase));
 
   // unused commands:
   /*
@@ -176,6 +180,9 @@ public class RobotContainer
 
     new JoystickButton(driverXbox, Constants.OIConstants.R_BUMPER)          // test
                       .whileTrue(demoPathCommand);
+
+    new JoystickButton(driverXbox, Constants.OIConstants.X)
+                      .onTrue(updatePositionWithAprilTags);                 // test
 
   }
 
