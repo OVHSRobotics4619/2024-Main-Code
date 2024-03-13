@@ -61,15 +61,19 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   public void updateGlobalPosition(SwerveSubsystem swerve) {
+    System.out.println("Updating global position using apriltags...");
     Pose2d previousPose2d = swerve.getPose();
+    System.out.println("Old Pose: " + previousPose2d.toString());
     Optional<EstimatedRobotPose> estimatedPosition = getEstimatedGlobalPose(previousPose2d);
     
     estimatedPosition.ifPresent(est -> {
       var estPose = est.estimatedPose.toPose2d();
+      System.out.println("Estimated Pose: " + estPose.toString());
       // Change our trust in the measurement based on the tags we can see
       Matrix<N3, N1> estStdDevs = getEstimationStdDevs(estPose);
 
       swerve.addVisionReading(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+      System.out.println("Added vision reading to swerve!");
     });
   }
 
