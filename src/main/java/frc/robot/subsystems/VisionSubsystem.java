@@ -61,11 +61,11 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   public void updateGlobalPosition(SwerveSubsystem swerve) {
-    System.out.println("Updating global position using apriltags...");
+    System.out.println("Attempting to update global position using apriltags...");
     Pose2d previousPose2d = swerve.getPose();
     System.out.println("Old Pose: " + previousPose2d.toString());
     Optional<EstimatedRobotPose> estimatedPosition = getEstimatedGlobalPose(previousPose2d);
-    
+    System.out.println(estimatedPosition);
     estimatedPosition.ifPresent(est -> {
       var estPose = est.estimatedPose.toPose2d();
       System.out.println("Estimated Pose: " + estPose.toString());
@@ -76,5 +76,4 @@ public class VisionSubsystem extends SubsystemBase {
       System.out.println("Added vision reading to swerve!");
     });
   }
-
 }
