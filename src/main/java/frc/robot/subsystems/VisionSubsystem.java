@@ -19,16 +19,19 @@ import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 public class VisionSubsystem extends SubsystemBase {
 
   PhotonCamera cam;
+  SwerveSubsystem swerve;
   PhotonPoseEstimator photonPoseEstimator;
 
-  public VisionSubsystem(PhotonCamera camera) {
+  public VisionSubsystem(PhotonCamera camera, SwerveSubsystem swerve) {
 
     //Forward Camera
     this.cam = camera;
 
+    this.swerve = swerve;
+
     // Construct PhotonPoseEstimator
     this.photonPoseEstimator = new PhotonPoseEstimator(Constants.AprilTags.kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cam, Constants.AprilTags.CameraConstants.kRobotToCam);
-
+    this.photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
   }
 
   public Matrix<N3, N1> getEstimationStdDevs(Pose2d estimatedPose) {
@@ -60,20 +63,28 @@ public class VisionSubsystem extends SubsystemBase {
     return photonPoseEstimator.update();
   }
 
-  public void updateGlobalPosition(SwerveSubsystem swerve) {
-    System.out.println("Attempting to update global position using apriltags...");
+  public void updateGlobalPosition() {
     Pose2d previousPose2d = swerve.getPose();
-    System.out.println("Old Pose: " + previousPose2d.toString());
+
+    //System.out.println("Old Pose: " + previousPose2d.toString());
+
     Optional<EstimatedRobotPose> estimatedPosition = getEstimatedGlobalPose(previousPose2d);
-    System.out.println(estimatedPosition);
+    //System.out.println(estimatedPosition);
     estimatedPosition.ifPresent(est -> {
-      var estPose = est.estimatedPose.toPose2d();
-      System.out.println("Estimated Pose: " + estPose.toString());
+      final Pose2d estPose = est.estimatedPose.toPose2d();
+      final double estTime = est.timestampSeconds;
+
+      //System.out.println("Estimated Pose: " + estPose.toString());
+
       // Change our trust in the measurement based on the tags we can see
       Matrix<N3, N1> estStdDevs = getEstimationStdDevs(estPose);
 
-      swerve.addVisionReading(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
-      System.out.println("Added vision reading to swerve!");
+      //final double distance = 2;  //get this from the apriltag somehow
+      //estStdDevs = VecBuilder.fill(distance / 2, distance / 2, 100);
+
+      swerve.addVisionReading(estPose, estTime, estStdDevs);
+      
+      //System.out.println("Added vision reading to swerve!");
     });
   }
 }
