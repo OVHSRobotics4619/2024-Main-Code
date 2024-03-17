@@ -70,7 +70,7 @@ public final class Constants
   public static final class Shooter 
   {
     // Motor speeds on a scale of 0 to 1
-    public static final double INTAKE_SPEED = 0.2;
+    public static final double INTAKE_SPEED = 0.5;
     public static final double SHOOTING_SPEED = 1;
 
     // Time (seconds) for how long the robot intakes (all 4 wheels)

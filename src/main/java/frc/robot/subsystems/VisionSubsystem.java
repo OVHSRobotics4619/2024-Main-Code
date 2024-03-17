@@ -74,7 +74,7 @@ public class VisionSubsystem extends SubsystemBase {
       final Pose2d estPose = est.estimatedPose.toPose2d();
       final double estTime = est.timestampSeconds;
 
-      //System.out.println("Estimated Pose: " + estPose.toString());
+      System.out.println("Estimated Pose: " + estPose.toString());
 
       // Change our trust in the measurement based on the tags we can see
       Matrix<N3, N1> estStdDevs = getEstimationStdDevs(estPose);

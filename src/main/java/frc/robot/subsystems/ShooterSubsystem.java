@@ -8,12 +8,12 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 /** A hatch mechanism actuated by a single {@link DoubleSolenoid}. */
 public class ShooterSubsystem extends SubsystemBase {
-  private VictorSPX topLeft   = new VictorSPX(12);
-  private VictorSPX topRight = new VictorSPX(14);
+  private VictorSPX topLeft   = new VictorSPX(14); //issues
+  private VictorSPX topRight = new VictorSPX(13);//done
 
 
-  private VictorSPX bottomRight = new VictorSPX(13);
-  private VictorSPX bottomLeft = new VictorSPX(15);
+  private VictorSPX bottomRight = new VictorSPX(15); //done
+  private VictorSPX bottomLeft = new VictorSPX(12); // done
 
   public ShooterSubsystem() {
     this.topRight.setInverted(true);
