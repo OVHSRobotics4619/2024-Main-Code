@@ -22,12 +22,16 @@ import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.PinSubsystem;
+
 import java.io.File;
 
 import org.photonvision.PhotonCamera;
 import frc.robot.commands.shooter.*;
 import frc.robot.commands.apriltags.PositionEstimation;
 import frc.robot.commands.apriltags.TurnToTag2;
+import frc.robot.commands.climber.Climb;
+import frc.robot.commands.climber.Extend;
 import frc.robot.subsystems.VisionSubsystem;
 
 //import frc.robot.commands.apriltags.TurnToTag;
@@ -49,11 +53,14 @@ public class RobotContainer
 
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
 
+  private final PinSubsystem pin = new PinSubsystem();
   private final ShooterSubsystem shooter = new ShooterSubsystem();
   private final ClimberSubsystem climber = new ClimberSubsystem();
   private final VisionSubsystem vision = new VisionSubsystem(camera, drivebase);
 
   private final Shoot autoShoot = new Shoot(shooter);
+  private final Extend climbExtend = new Extend(climber, pin);
+  private final Climb climb = new Climb(climber, pin);
   private final PositionEstimation aprilPositionEstimation = new PositionEstimation(vision);
 
 
@@ -171,13 +178,11 @@ public class RobotContainer
                       .onTrue(new InstantCommand(shooter::shoot))
                       .onFalse(new InstantCommand(shooter::stopAll));
 
-    new JoystickButton(driverXbox, Constants.OIConstants.A)                 // done
-                      .onTrue(new InstantCommand(climber::climbArmDown))
-                      .onFalse(new InstantCommand(climber::stopClimb));
+    new JoystickButton(driverXbox, Constants.OIConstants.A)
+                      .whileTrue(climbExtend);
 
-    new JoystickButton(driverXbox, Constants.OIConstants.Y)                 // done
-                      .onTrue(new InstantCommand(climber::climbArmUp))
-                      .onFalse(new InstantCommand(climber::stopClimb));
+    new JoystickButton(driverXbox, Constants.OIConstants.Y)
+                      .whileTrue(climb);
 
     new JoystickButton(driverXbox, Constants.OIConstants.R_BUMPER)          // test
                       .whileTrue(demoPathCommand);
