@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Shooter;
 
@@ -8,16 +9,16 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 /** A hatch mechanism actuated by a single {@link DoubleSolenoid}. */
 public class ShooterSubsystem extends SubsystemBase {
-  private VictorSPX topLeft   = new VictorSPX(14); //issues
+  private VictorSPX topLeft   = new VictorSPX(12); //issues
   private VictorSPX topRight = new VictorSPX(13);//done
 
 
   private VictorSPX bottomRight = new VictorSPX(15); //done
-  private VictorSPX bottomLeft = new VictorSPX(12); // done
+  private VictorSPX bottomLeft = new VictorSPX(14); // done
 
   public ShooterSubsystem() {
-    this.topRight.setInverted(true);
     this.bottomRight.setInverted(true);
+    this.topLeft.setInverted(true);
   }
 
   public void setShoot(double speed) {
@@ -49,11 +50,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void shoot() {
     this.setShoot(Shooter.SHOOTING_SPEED);
-    this.setIntake(Shooter.INTAKE_SPEED);
+    this.setIntake(Shooter.OUTTAKE_SPEED);
   }
 
   public void intake() {
-    this.setIntake(-Shooter.INTAKE_SPEED);
+    //this.setIntake(-Shooter.INTAKE_SPEED);
     this.setShoot(-Shooter.INTAKE_SPEED);
   }
 

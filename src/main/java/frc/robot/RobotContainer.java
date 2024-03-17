@@ -59,6 +59,7 @@ public class RobotContainer
   private final VisionSubsystem vision = new VisionSubsystem(camera, drivebase);
 
   private final Shoot autoShoot = new Shoot(shooter);
+  private final Intake intake = new Intake(shooter);
   private final Extend climbExtend = new Extend(climber, pin);
   private final Climb climb = new Climb(climber, pin);
   private final PositionEstimation aprilPositionEstimation = new PositionEstimation(vision);
@@ -66,7 +67,6 @@ public class RobotContainer
 
   // unused commands:
   /*
-  private final Intake autoIntake = new Intake(shooter);
   private final Climb autoClimb = new Climb(climber);
   private final AprilCommand aprilCommand = new AprilCommand(camera, drivebase);
   private final TurnToTag pointToTag = new TurnToTag(camera, drivebase, 0);
@@ -171,8 +171,7 @@ public class RobotContainer
                       .onTrue((new InstantCommand(drivebase::zeroGyro)));
 
     leftTrigger                                                             // done
-                      .onTrue(new InstantCommand(shooter::intake))
-                      .onFalse(new InstantCommand(shooter::stopAll));
+                      .whileTrue(intake);
 
     new JoystickButton(driverXbox, Constants.OIConstants.L_BUMPER)          // done
                       .onTrue(new InstantCommand(shooter::shoot))

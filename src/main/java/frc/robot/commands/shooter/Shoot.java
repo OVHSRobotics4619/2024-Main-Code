@@ -28,8 +28,6 @@ public class Shoot extends Command {
     public void initialize() {
       System.out.println("Shooting");
       
-      ShootSpeed = SmartDashboard.getNumber("ShootingSpeed", Constants.Shooter.SHOOTING_SPEED);
-      
       driveTime.reset();
       driveTime.start();
     }
@@ -39,9 +37,9 @@ public class Shoot extends Command {
       Time = driveTime.get();
 
       if (Time < Constants.Shooter.SHOOTING_RAMPUP_TIME) {
-        shooterSubsystem.setShoot(ShootSpeed);
+        shooterSubsystem.setShoot(Constants.Shooter.SHOOTING_SPEED);
       } else {
-        shooterSubsystem.setIntake(Constants.Shooter.INTAKE_SPEED);
+        shooterSubsystem.setIntake(Constants.Shooter.OUTTAKE_SPEED);
       }
     }
 
