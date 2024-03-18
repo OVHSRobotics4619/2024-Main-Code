@@ -20,6 +20,7 @@ public class Extend extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
+      System.out.println("Starting arm extension");
     }
 
     @Override
@@ -31,6 +32,7 @@ public class Extend extends Command {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
+      System.out.println("Stopping arm extension");
       climberSubsystem.stopClimb();
       pinSubsystem.disablePin();
     }

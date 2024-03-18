@@ -130,7 +130,7 @@ public class SwerveSubsystem extends SubsystemBase
   {
     // Load the path you want to follow using its name in the GUI
     PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
-
+    
     if (setOdomToStart)
     {
       resetOdometry(new Pose2d(path.getPoint(0).position, getHeading()));

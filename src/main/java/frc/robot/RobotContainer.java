@@ -27,6 +27,10 @@ import frc.robot.subsystems.PinSubsystem;
 import java.io.File;
 
 import org.photonvision.PhotonCamera;
+
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import frc.robot.commands.shooter.*;
 import frc.robot.commands.apriltags.PositionEstimation;
 import frc.robot.commands.apriltags.TurnToTag2;
@@ -65,6 +69,7 @@ public class RobotContainer
   private final PositionEstimation aprilPositionEstimation = new PositionEstimation(vision);
 
 
+
   // unused commands:
   /*
   private final Climb autoClimb = new Climb(climber);
@@ -74,6 +79,7 @@ public class RobotContainer
 
   private final Command demoPathCommand = drivebase.getAutonomousCommand("hAWK PATH", true);
 
+  private final Command demoShootPathCommand = new PathPlannerAuto("Shoot demo");
   // point to tag V2 code starts here
 
   private PIDController turnController = new PIDController(.1, 0, 0);
@@ -95,6 +101,9 @@ public class RobotContainer
    */
   public RobotContainer()
   {
+
+    NamedCommands.registerCommand("autoShoot", autoShoot);
+
     // Configure the trigger bindings
     configureBindings();
 
@@ -184,7 +193,7 @@ public class RobotContainer
                       .whileTrue(climb);
 
     new JoystickButton(driverXbox, Constants.OIConstants.R_BUMPER)          // test
-                      .whileTrue(demoPathCommand);
+                      .whileTrue(demoShootPathCommand);
 
     new JoystickButton(driverXbox, Constants.OIConstants.X)
                       .whileTrue(aprilPositionEstimation);                 // test

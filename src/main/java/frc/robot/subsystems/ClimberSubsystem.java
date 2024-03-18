@@ -7,7 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 
 public class ClimberSubsystem extends SubsystemBase {
-  private TalonSRX climbMotor = new TalonSRX(16);
+  private TalonSRX climbMotor = new TalonSRX(20);
 
   public ClimberSubsystem() {
     this.climbMotor.setInverted(true);

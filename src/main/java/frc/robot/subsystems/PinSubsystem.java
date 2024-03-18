@@ -7,7 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 /** A hatch mechanism actuated by a single {@link DoubleSolenoid}. */
 public class PinSubsystem extends SubsystemBase {
-  private TalonSRX pinMotor = new TalonSRX(14);
+  private TalonSRX pinMotor = new TalonSRX(21);
 
   public PinSubsystem() {
   }
