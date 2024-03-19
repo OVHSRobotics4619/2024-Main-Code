@@ -65,6 +65,8 @@ public final class Constants
 
     // Time that the climber climbs up (seconds)
     public static final double CLIMB_TIME = 1;
+
+    public static final double HOLD_TIME = 0.3;
   }
 
   public static final class Shooter 
@@ -78,7 +80,7 @@ public final class Constants
     static final public double INTAKE_TIME = 1;
 
     // Time (seconds) for how long the shooter charges (front 2 wheels only)
-    static final public double SHOOTING_RAMPUP_TIME = 0.5;
+    static final public double SHOOTING_RAMPUP_TIME = 1;
 
     // Time (seconds) for how long the shooter shoots after charging (all 4 wheels)
     static final public double SHOOTING_SHOOT_TIME = 1;

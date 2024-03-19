@@ -36,6 +36,7 @@ import frc.robot.commands.apriltags.PositionEstimation;
 import frc.robot.commands.apriltags.TurnToTag2;
 import frc.robot.commands.climber.Climb;
 import frc.robot.commands.climber.Extend;
+import frc.robot.commands.climber.Hold;
 import frc.robot.subsystems.VisionSubsystem;
 
 //import frc.robot.commands.apriltags.TurnToTag;
@@ -66,6 +67,7 @@ public class RobotContainer
   private final Intake intake = new Intake(shooter);
   private final Extend climbExtend = new Extend(climber, pin);
   private final Climb climb = new Climb(climber, pin);
+  private final Hold hold = new Hold(climber, pin);
   private final PositionEstimation aprilPositionEstimation = new PositionEstimation(vision);
 
 
@@ -187,10 +189,11 @@ public class RobotContainer
                       .onFalse(new InstantCommand(shooter::stopAll));
 
     new JoystickButton(driverXbox, Constants.OIConstants.A)
-                      .whileTrue(climbExtend);
+                      .whileTrue(climb)
+                      .whileFalse(hold);
 
     new JoystickButton(driverXbox, Constants.OIConstants.Y)
-                      .whileTrue(climb);
+                      .whileTrue(climbExtend);
 
     new JoystickButton(driverXbox, Constants.OIConstants.R_BUMPER)          // test
                       .whileTrue(demoShootPathCommand);

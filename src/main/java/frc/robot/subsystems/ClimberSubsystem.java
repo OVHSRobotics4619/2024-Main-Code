@@ -10,7 +10,7 @@ public class ClimberSubsystem extends SubsystemBase {
   private TalonSRX climbMotor = new TalonSRX(20);
 
   public ClimberSubsystem() {
-    this.climbMotor.setInverted(true);
+    this.climbMotor.setInverted(false);
   }
 
   public void climb(double speed) {

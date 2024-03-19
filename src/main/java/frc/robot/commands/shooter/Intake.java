@@ -22,7 +22,7 @@ public class Intake extends Command {
     @Override
     public void execute() {
       shooterSubsystem.setShoot(-Constants.Shooter.INTAKE_SPEED);
-      //shooterSubsystem.setIntake(-Constants.Shooter.INTAKE_SPEED);
+      shooterSubsystem.setIntake(-Constants.Shooter.INTAKE_SPEED);
     }
 
     // Called once the command ends or is interrupted.
