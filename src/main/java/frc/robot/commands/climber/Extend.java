@@ -9,6 +9,8 @@ public class Extend extends Command {
 
     private final ClimberSubsystem climberSubsystem;
     private final PinSubsystem pinSubsystem;
+    private Timer driveTime = new Timer();
+    private double Time;
 
   public Extend(ClimberSubsystem climberSubsystem, PinSubsystem pinSubsystem) {
     this.climberSubsystem = climberSubsystem;
@@ -20,19 +22,24 @@ public class Extend extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-      System.out.println("Starting arm extension");
+      driveTime.reset();
+      driveTime.start();
     }
 
     @Override
     public void execute() {
-      climberSubsystem.climbArmUp();
+      Time = driveTime.get();
+
+      if (Time > 0.2) {
+        climberSubsystem.climbArmUp();
+      }
+      
       pinSubsystem.enablePin();
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-      System.out.println("Stopping arm extension");
       climberSubsystem.stopClimb();
       pinSubsystem.disablePin();
     }
