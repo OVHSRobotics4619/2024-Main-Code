@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
@@ -24,6 +25,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.FlapSubsystem;
 import frc.robot.subsystems.PinSubsystem;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import java.io.File;
 
@@ -187,7 +189,7 @@ public class RobotContainer
                       .whileTrue(intake);
 
     new JoystickButton(driverXbox, Constants.OIConstants.L_BUMPER)          // done
-                      .onTrue(new InstantCommand(shooter::shoot))
+                      .onTrue(new InstantCommand(shooter::amp))
                       .onFalse(new InstantCommand(shooter::stopAll));
 
     new JoystickButton(driverXbox, Constants.OIConstants.A)
@@ -200,6 +202,7 @@ public class RobotContainer
     new JoystickButton(driverXbox, Constants.OIConstants.R_BUMPER)          // test
                       .whileTrue(demoPathCommand);
 
+    
     new JoystickButton(driverXbox, Constants.OIConstants.X)
                       .whileTrue(aprilPositionEstimation);                 // test
 
@@ -213,7 +216,10 @@ public class RobotContainer
   public Command getAutonomousCommand()
   {
     // An example command will be run in autonomous
-    return drivebase.getAutonomousCommand("Auto Path", true);
+    PathPlannerAuto thisAuto = new PathPlannerAuto("Shoot demo");
+
+    drivebase.resetOdometry(PathPlannerAuto.getStaringPoseFromAutoFile("Shoot demo")); 
+    return thisAuto;
   }
 
   public void setDriveMode()
