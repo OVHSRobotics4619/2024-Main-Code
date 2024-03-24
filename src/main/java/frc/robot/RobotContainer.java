@@ -22,6 +22,7 @@ import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.FlapSubsystem;
 import frc.robot.subsystems.PinSubsystem;
 
 import java.io.File;
@@ -62,6 +63,7 @@ public class RobotContainer
   private final ShooterSubsystem shooter = new ShooterSubsystem();
   private final ClimberSubsystem climber = new ClimberSubsystem();
   private final VisionSubsystem vision = new VisionSubsystem(camera, drivebase);
+  private final FlapSubsystem flap = new FlapSubsystem();
 
   private final Shoot autoShoot = new Shoot(shooter);
   private final Intake intake = new Intake(shooter);
