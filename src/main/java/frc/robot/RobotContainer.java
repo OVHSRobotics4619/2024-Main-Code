@@ -79,7 +79,7 @@ public class RobotContainer
   private final TurnToTag pointToTag = new TurnToTag(camera, drivebase, 0);
   */
 
-  private final Command demoPathCommand = drivebase.getAutonomousCommand("hAWK PATH", true);
+  private final Command demoPathCommand = drivebase.getAutonomousCommand("New Path", true);
 
   private final Command demoShootPathCommand = new PathPlannerAuto("Shoot demo");
   // point to tag V2 code starts here
@@ -196,7 +196,7 @@ public class RobotContainer
                       .whileTrue(climbExtend);
 
     new JoystickButton(driverXbox, Constants.OIConstants.R_BUMPER)          // test
-                      .whileTrue(demoShootPathCommand);
+                      .whileTrue(demoPathCommand);
 
     new JoystickButton(driverXbox, Constants.OIConstants.X)
                       .whileTrue(aprilPositionEstimation);                 // test
