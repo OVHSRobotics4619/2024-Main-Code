@@ -61,12 +61,12 @@ public final class Constants
   public static final class Climber 
   {
     // Motor speeds on a scale of 0 to 1
-    public static final double CLIMB_SPEED = 0.8;
+    public static final double CLIMB_SPEED = 1;
 
     // Time that the climber climbs up (seconds)
     public static final double CLIMB_TIME = 1;
 
-    public static final double HOLD_TIME = 0.3;
+    public static final double HOLD_TIME = 0.5;
   }
 
   public static final class Shooter 
@@ -141,7 +141,7 @@ public final class Constants
       
       // Cam mounted facing forward, half a meter forward of center, half a meter up from center.
       public static final Transform3d kRobotToCam =
-            new Transform3d(new Translation3d(Units.inchesToMeters(11), Units.inchesToMeters(-1.5), Units.inchesToMeters(12.5)), new Rotation3d(0, Math.toRadians(12), Math.toRadians(90)));
+            new Transform3d(new Translation3d(Units.inchesToMeters(11), Units.inchesToMeters(-1.5), Units.inchesToMeters(12.5)), new Rotation3d(0, Math.toRadians(-12), Math.toRadians(0)));
     }
   }
 }

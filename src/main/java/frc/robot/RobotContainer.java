@@ -32,6 +32,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import frc.robot.commands.shooter.*;
+import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.apriltags.PositionEstimation;
 import frc.robot.commands.apriltags.TurnToTag2;
 import frc.robot.commands.climber.Climb;
@@ -117,8 +118,14 @@ public class RobotContainer
                                                                                   Constants.OperatorConstants.LEFT_Y_DEADBAND),
                                                     () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
                                                                                   Constants.OperatorConstants.LEFT_X_DEADBAND),
-                                                    () -> -driverXbox.getRightX(),
+                                                    () -> driverXbox.getRightX(),
                                                     () -> -driverXbox.getRightY());
+
+    Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
+        () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+        () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+        () -> driverXbox.getRightX(),
+        () -> driverXbox.getRightY());
 
     AbsoluteFieldDrive closedFieldAbsoluteDrive = new AbsoluteFieldDrive(drivebase,
                                                     () ->
@@ -156,8 +163,8 @@ public class RobotContainer
         () -> MathUtil.applyDeadband(driverController.getRawAxis(0), Constants.OperatorConstants.LEFT_X_DEADBAND),
         () -> -driverController.getRawAxis(2), () -> true);
 
-    drivebase.setDefaultCommand(!RobotBase.isSimulation() ? closedAbsoluteDrive : closedFieldAbsoluteDrive);
-    //drivebase.setDefaultCommand(closedAbsoluteDriveAdv);
+    //drivebase.setDefaultCommand(!RobotBase.isSimulation() ? closedAbsoluteDrive : closedFieldAbsoluteDrive);
+    drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
   }
 
   /**
