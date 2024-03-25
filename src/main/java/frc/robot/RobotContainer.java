@@ -7,12 +7,14 @@ package frc.robot;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
@@ -22,7 +24,9 @@ import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.FlapSubsystem;
 import frc.robot.subsystems.PinSubsystem;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import java.io.File;
 
@@ -62,6 +66,7 @@ public class RobotContainer
   private final ShooterSubsystem shooter = new ShooterSubsystem();
   private final ClimberSubsystem climber = new ClimberSubsystem();
   private final VisionSubsystem vision = new VisionSubsystem(camera, drivebase);
+  private final FlapSubsystem flap = new FlapSubsystem();
 
   private final Shoot autoShoot = new Shoot(shooter);
   private final Intake intake = new Intake(shooter);
@@ -79,24 +84,25 @@ public class RobotContainer
   private final TurnToTag pointToTag = new TurnToTag(camera, drivebase, 0);
   */
 
-  private final Command demoPathCommand = drivebase.getAutonomousCommand("hAWK PATH", true);
+  private final Command demoPathCommand = drivebase.getAutonomousCommand("New Path", true);
 
   private final Command demoShootPathCommand = new PathPlannerAuto("Shoot demo");
+  
   // point to tag V2 code starts here
 
   private PIDController turnController = new PIDController(.1, 0, 0);
-
-  private PIDController forwardController = new PIDController(.1, 0, 0);
+  private PIDController forwardController = new PIDController(1, 0, 1);
 
   private TurnToTag2 pointToTag2 = new TurnToTag2(camera, drivebase, turnController, forwardController);
 
   // CommandJoystick rotationController = new CommandJoystick(1);
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  CommandJoystick driverController = new CommandJoystick(1);
+  CommandJoystick driverController = new CommandJoystick(2);
 
   // CommandJoystick driverController   = new CommandJoystick(3);//(OperatorConstants.DRIVER_CONTROLLER_PORT);
-  XboxController driverXbox = new XboxController(0);
 
+  XboxController driverXbox = new XboxController(0);
+  GenericHID buttonBoard = new GenericHID(1);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -185,7 +191,7 @@ public class RobotContainer
                       .whileTrue(intake);
 
     new JoystickButton(driverXbox, Constants.OIConstants.L_BUMPER)          // done
-                      .onTrue(new InstantCommand(shooter::shoot))
+                      .onTrue(new InstantCommand(shooter::amp))
                       .onFalse(new InstantCommand(shooter::stopAll));
 
     new JoystickButton(driverXbox, Constants.OIConstants.A)
@@ -196,8 +202,9 @@ public class RobotContainer
                       .whileTrue(climbExtend);
 
     new JoystickButton(driverXbox, Constants.OIConstants.R_BUMPER)          // test
-                      .whileTrue(demoShootPathCommand);
+                      .whileTrue(demoPathCommand);
 
+    
     new JoystickButton(driverXbox, Constants.OIConstants.X)
                       .whileTrue(aprilPositionEstimation);                 // test
 
@@ -211,13 +218,10 @@ public class RobotContainer
   public Command getAutonomousCommand()
   {
     // An example command will be run in autonomous
-    return drivebase.getAutonomousCommand("Auto Path", true);
-  }
+    PathPlannerAuto thisAuto = new PathPlannerAuto("Shoot demo");
 
-  public void setDriveMode()
-  {
-    //drivebase.setDefaultCommand(closedAbsoluteDriveAdv);
-    //drivebase.setDefaultCommand();
+    drivebase.resetOdometry(PathPlannerAuto.getStaringPoseFromAutoFile("Shoot demo")); 
+    return thisAuto;
   }
 
   public void setMotorBrake(boolean brake)

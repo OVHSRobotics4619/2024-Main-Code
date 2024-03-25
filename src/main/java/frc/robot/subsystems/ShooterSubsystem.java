@@ -53,6 +53,11 @@ public class ShooterSubsystem extends SubsystemBase {
     this.setIntake(Shooter.OUTTAKE_SPEED);
   }
 
+  public void amp() {
+    this.setShoot(Shooter.AMP_SPEED);
+    this.setIntake(Shooter.OUTTAKE_SPEED);
+  }
+
   public void intake() {
     //this.setIntake(-Shooter.INTAKE_SPEED);
     this.setShoot(-Shooter.INTAKE_SPEED);

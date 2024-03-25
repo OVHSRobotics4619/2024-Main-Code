@@ -61,20 +61,22 @@ public final class Constants
   public static final class Climber 
   {
     // Motor speeds on a scale of 0 to 1
-    public static final double CLIMB_SPEED = 0.8;
+    public static final double CLIMB_SPEED = 1;
 
     // Time that the climber climbs up (seconds)
     public static final double CLIMB_TIME = 1;
 
-    public static final double HOLD_TIME = 0.3;
+    public static final double HOLD_TIME = 0.5;
   }
 
   public static final class Shooter 
   {
     // Motor speeds on a scale of 0 to 1
-    public static final double INTAKE_SPEED = 0.4;
-    public static final double OUTTAKE_SPEED = 0.9;
-    public static final double SHOOTING_SPEED = 1;
+    public static final double INTAKE_SPEED = 0.6;
+    public static final double OUTTAKE_SPEED = 0.8;
+    public static final double SHOOTING_SPEED = 0.8;
+    
+    public static final double AMP_SPEED = 0.5;
 
     // Time (seconds) for how long the robot intakes
     static final public double INTAKE_TIME = 1;
@@ -84,6 +86,9 @@ public final class Constants
 
     // Time (seconds) for how long the shooter shoots after charging (all 4 wheels)
     static final public double SHOOTING_SHOOT_TIME = 1;
+
+    // Distance away from apriltag robot tries to align with
+    public static final double GOAL_RANGE_METERS = 2.2;
 
 
   }
@@ -102,8 +107,8 @@ public final class Constants
     public final static int R_BUMPER = 6;
     public final static int BACK = 7;
     public final static int START = 8;	
-    public final static int LEFT_STICK_PRESS = 9;	
-    public final static int RIGHT_STICK_PRESS = 10;	
+    public final static int LEFT_STICK_PRESS = 9;
+    public final static int RIGHT_STICK_PRESS = 10;
     
     // Xbox controller axis mappings
     public final static int LEFT_STICK_X_AXIS = 0;
@@ -132,16 +137,12 @@ public final class Constants
     public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
     public static final class CameraConstants {
-      public static final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(24);
-      public static final double TARGET_HEIGHT_METERS = Units.inchesToMeters(24);
-      public static final double CAMERA_PITCH_RADIANS = Units.inchesToMeters(24);
-      public static final double GOAL_RANGE_METERS = Units.inchesToMeters(24);
 
       public static final String kCameraName = "Cookie";
       
       // Cam mounted facing forward, half a meter forward of center, half a meter up from center.
       public static final Transform3d kRobotToCam =
-            new Transform3d(new Translation3d(Units.inchesToMeters(11), Units.inchesToMeters(-1.5), Units.inchesToMeters(12.5)), new Rotation3d(0, Math.toRadians(12), Math.toRadians(90)));
+            new Transform3d(new Translation3d(Units.inchesToMeters(11), Units.inchesToMeters(-1.5), Units.inchesToMeters(12.5)), new Rotation3d(0, Math.toRadians(-12), Math.toRadians(0)));
     }
   }
 }

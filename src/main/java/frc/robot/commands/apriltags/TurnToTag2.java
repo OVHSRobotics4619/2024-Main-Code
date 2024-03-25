@@ -1,11 +1,14 @@
 package frc.robot.commands.apriltags;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
+
+import java.util.List;
+
 import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
+
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.Constants;
 
@@ -32,17 +35,29 @@ public class TurnToTag2 extends Command {
     @Override
     public void execute() {
         PhotonPipelineResult result = camera.getLatestResult();
+        double angleSpeed = 0.0;
+        double forwardSpeed = 0.0;
         if (result.hasTargets()) {
-            double angleSpeed = angle.calculate(result.getBestTarget().getYaw(), 0);
-            double range = PhotonUtils.calculateDistanceToTargetMeters(Constants.AprilTags.CameraConstants.CAMERA_HEIGHT_METERS, Constants.AprilTags.CameraConstants.TARGET_HEIGHT_METERS, Constants.AprilTags.CameraConstants.CAMERA_PITCH_RADIANS, Units.degreesToRadians(result.getBestTarget().getPitch()));
-            double forwardSpeed = -forward.calculate(range, Constants.AprilTags.CameraConstants.GOAL_RANGE_METERS);
-            swerveSubsystem.driveWithVision(angleSpeed);
-        } else {
-            double angleSpeed = 0.0;
-            double forwardSpeed = 0.0;
-            swerveSubsystem.driveWithVision(angleSpeed);
-        }
 
+            PhotonTrackedTarget mainTarget;
+            List<PhotonTrackedTarget>targets = result.getTargets();
+            for (PhotonTrackedTarget target : targets) 
+            {
+                int targetId = target.getFiducialId();
+                if (targetId == 4 || targetId == 7)
+                {
+                    mainTarget = target;
+                    angleSpeed = angle.calculate(mainTarget.getYaw(), 0);
+                    double range = mainTarget.getBestCameraToTarget().getX();
+                    forwardSpeed = forward.calculate(range, Constants.Shooter.GOAL_RANGE_METERS);
+                    // System.out.println("Forward speed: " + forwardSpeed);
+                    // System.out.println("Forward distance: " + range);
+                    swerveSubsystem.driveWithVision(angleSpeed, forwardSpeed);
+                    break;
+                }
+            }
+        }
+        
     }
 
     @Override

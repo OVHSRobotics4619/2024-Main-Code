@@ -1,5 +1,4 @@
 package frc.robot.commands.swervedrive.drivebase;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -37,7 +36,7 @@ public class AprilCommand extends Command {
 
             double rotationSpeed = -yaw * (Math.PI / 180) * Constants.AprilTags.TURN_SPEED_MULTIPLIER;
             
-            swerve.driveWithVision(rotationSpeed);
+            swerve.driveWithVision(rotationSpeed, 0);
         }
     }
     
