@@ -440,10 +440,10 @@ public class SwerveSubsystem extends SubsystemBase
     swerveDrive.addVisionMeasurement(visionMeasurement, timestampSeconds, stdDevs);
   }
 
-  public void driveWithVision(double rotation) {
+  public void driveWithVision(double rotation, double forward) {
     // Your YAGSL Swerve drive control logic based on vision targets
     // Adjust the swerve drive motors accordingly
 
-    swerveDrive.drive(new Translation2d(), rotation, false, false);
+    swerveDrive.drive(new Translation2d(forward, 0), rotation, false, false);
   }
 }

@@ -6,15 +6,12 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shoot extends Command {
 
     private final ShooterSubsystem shooterSubsystem;
     private Timer driveTime = new Timer();
     private double Time;
-
-    private double ShootSpeed;
 
   public Shoot(ShooterSubsystem shooterSubsystem) {
     this.shooterSubsystem = shooterSubsystem;

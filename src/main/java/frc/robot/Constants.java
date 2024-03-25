@@ -87,6 +87,9 @@ public final class Constants
     // Time (seconds) for how long the shooter shoots after charging (all 4 wheels)
     static final public double SHOOTING_SHOOT_TIME = 1;
 
+    // Distance away from apriltag robot tries to align with
+    public static final double GOAL_RANGE_METERS = 2.2;
+
 
   }
 
@@ -104,8 +107,8 @@ public final class Constants
     public final static int R_BUMPER = 6;
     public final static int BACK = 7;
     public final static int START = 8;	
-    public final static int LEFT_STICK_PRESS = 9;	
-    public final static int RIGHT_STICK_PRESS = 10;	
+    public final static int LEFT_STICK_PRESS = 9;
+    public final static int RIGHT_STICK_PRESS = 10;
     
     // Xbox controller axis mappings
     public final static int LEFT_STICK_X_AXIS = 0;
@@ -134,10 +137,6 @@ public final class Constants
     public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
     public static final class CameraConstants {
-      public static final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(24);
-      public static final double TARGET_HEIGHT_METERS = Units.inchesToMeters(24);
-      public static final double CAMERA_PITCH_RADIANS = Units.inchesToMeters(24);
-      public static final double GOAL_RANGE_METERS = Units.inchesToMeters(24);
 
       public static final String kCameraName = "Cookie";
       

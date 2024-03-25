@@ -86,11 +86,11 @@ public class RobotContainer
   private final Command demoPathCommand = drivebase.getAutonomousCommand("New Path", true);
 
   private final Command demoShootPathCommand = new PathPlannerAuto("Shoot demo");
+  
   // point to tag V2 code starts here
 
   private PIDController turnController = new PIDController(.1, 0, 0);
-
-  private PIDController forwardController = new PIDController(.1, 0, 0);
+  private PIDController forwardController = new PIDController(1, 0, 1);
 
   private TurnToTag2 pointToTag2 = new TurnToTag2(camera, drivebase, turnController, forwardController);
 
@@ -220,12 +220,6 @@ public class RobotContainer
 
     drivebase.resetOdometry(PathPlannerAuto.getStaringPoseFromAutoFile("Shoot demo")); 
     return thisAuto;
-  }
-
-  public void setDriveMode()
-  {
-    //drivebase.setDefaultCommand(closedAbsoluteDriveAdv);
-    //drivebase.setDefaultCommand();
   }
 
   public void setMotorBrake(boolean brake)
