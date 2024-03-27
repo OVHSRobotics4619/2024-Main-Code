@@ -88,7 +88,7 @@ public final class Constants
     static final public double SHOOTING_SHOOT_TIME = 1;
 
     // Distance away from apriltag robot tries to align with
-    public static final double GOAL_RANGE_METERS = 2.2;
+    public static final double GOAL_RANGE_METERS = 2.4;
 
 
   }

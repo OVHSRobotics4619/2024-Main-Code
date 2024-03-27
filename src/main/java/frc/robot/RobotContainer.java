@@ -38,6 +38,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import frc.robot.commands.shooter.*;
 import frc.robot.commands.apriltags.PositionEstimation;
 import frc.robot.commands.apriltags.TurnToTag2;
+import frc.robot.commands.apriltags.TurnToTag3;
 import frc.robot.commands.climber.Climb;
 import frc.robot.commands.climber.Extend;
 import frc.robot.commands.climber.Hold;
@@ -91,8 +92,8 @@ public class RobotContainer
   // point to tag V2 code starts here
 
   private PIDController turnController = new PIDController(.1, 0, 0);
-  private PIDController forwardController = new PIDController(0.5, 0, 0);
-  private TurnToTag2 pointToTag2 = new TurnToTag2(camera, drivebase, turnController, forwardController);
+  private PIDController forwardController = new PIDController(2, 0, 0);
+  private TurnToTag3 pointToTag3 = new TurnToTag3(camera, drivebase, turnController, forwardController);
 
   // CommandJoystick rotationController = new CommandJoystick(1);
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -184,7 +185,7 @@ public class RobotContainer
     rightTrigger.onTrue(autoShoot);                                         // done
     
     new JoystickButton(driverXbox, Constants.OIConstants.START)             // done
-                      .whileTrue(pointToTag2);
+                      .whileTrue(pointToTag3);
 
     new JoystickButton(driverXbox, Constants.OIConstants.BACK)              // done
                       .onTrue((new InstantCommand(drivebase::zeroGyro)));
