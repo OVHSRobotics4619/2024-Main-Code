@@ -92,7 +92,7 @@ public class RobotContainer
   // point to tag V2 code starts here
 
   private PIDController turnController = new PIDController(.1, 0, 0);
-  private PIDController forwardController = new PIDController(2, 0, 0);
+  private PIDController forwardController = new PIDController(1, 0, 0);
   private TurnToTag3 pointToTag3 = new TurnToTag3(camera, drivebase, turnController, forwardController);
 
   // CommandJoystick rotationController = new CommandJoystick(1);

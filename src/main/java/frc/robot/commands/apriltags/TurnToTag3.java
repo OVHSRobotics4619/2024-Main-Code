@@ -1,6 +1,8 @@
 package frc.robot.commands.apriltags;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import java.util.List;
@@ -21,6 +23,11 @@ public class TurnToTag3 extends Command {
 
     private double previousForwardSpeed;
 
+    private boolean endCommand;
+
+    private Timer driveTime = new Timer();
+    private double Time;
+
     public TurnToTag3(PhotonCamera camera, SwerveSubsystem swerveSubsystem, PIDController angle, PIDController forward) {
         this.camera = camera;
         this.angle = angle;
@@ -31,12 +38,18 @@ public class TurnToTag3 extends Command {
 
     @Override
     public void initialize() {
+        driveTime.reset();
+        driveTime.start();
+
         previousForwardSpeed = 0;
+        endCommand = false;
         // Initialization logic (if needed)
     }
 
     @Override
     public void execute() {
+        Time = driveTime.get();
+
         PhotonPipelineResult result = camera.getLatestResult();
         double angleSpeed = 0.0;
         double forwardSpeed = previousForwardSpeed / 2;
@@ -49,11 +62,20 @@ public class TurnToTag3 extends Command {
                 int targetId = target.getFiducialId();
                 if (targetId == 4 || targetId == 7)
                 {
+
                     mainTarget = target;
+
+                    Transform3d bestTagPose = mainTarget.getBestCameraToTarget();
+
                     angleSpeed = angle.calculate(mainTarget.getYaw(), 0);
-                    double range = mainTarget.getBestCameraToTarget().getX();
+                    double range = Math.sqrt(Math.pow(bestTagPose.getX(), 2) + Math.pow(bestTagPose.getY(), 2));
                     forwardSpeed = forward.calculate(range, Constants.Shooter.GOAL_RANGE_METERS);
                     previousForwardSpeed = forwardSpeed;
+
+                    if ((Math.abs(Constants.Shooter.GOAL_RANGE_METERS - range) < 0.1) && (Math.abs(forwardSpeed) < 0.1)) {
+                        endCommand = true;
+                    }
+
                     // System.out.println("Forward speed: " + forwardSpeed);
                     // System.out.println("Forward distance: " + range);
                     break;
@@ -70,7 +92,10 @@ public class TurnToTag3 extends Command {
 
     @Override
     public boolean isFinished() {
-        // Determine when the command should end (e.g., after a certain duration)
+        if (endCommand || (Time > 5)) {
+            System.out.println("Stopped auto shooter alignment");
+            return true;
+        }
         return false;
     }
 }
