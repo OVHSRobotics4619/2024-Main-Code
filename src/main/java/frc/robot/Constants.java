@@ -119,6 +119,26 @@ public final class Constants
     public final static int RIGHT_STICK_Y_AXIS = 5;
   }
 
+  public static class buttonBoard
+  {
+    public final static int A = 1;
+    public final static int B = 2;
+    public final static int X = 3;
+    public final static int Y = 4;
+    public final static int L1 = 5;
+    public final static int R1 = 6;
+    public final static int SHARE = 7;
+    public final static int OPTIONS = 8;
+    public final static int L3 = 9;
+    public final static int R3 = 10;
+
+    public final static int L2_TRIGGER = 2;
+    public final static int R2_TRIGGER = 3;
+
+    public final static int Joystick_X = 0;
+    public final static int Joystick_Y = 1;
+  }
+
   public static class AprilTags
   {
 

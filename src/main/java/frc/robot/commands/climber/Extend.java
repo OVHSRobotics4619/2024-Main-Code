@@ -24,6 +24,7 @@ public class Extend extends Command {
     public void initialize() {
       driveTime.reset();
       driveTime.start();
+      System.out.println("Climber Extending");
     }
 
     @Override

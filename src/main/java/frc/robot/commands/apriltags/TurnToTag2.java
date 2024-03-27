@@ -52,12 +52,11 @@ public class TurnToTag2 extends Command {
                     forwardSpeed = forward.calculate(range, Constants.Shooter.GOAL_RANGE_METERS);
                     // System.out.println("Forward speed: " + forwardSpeed);
                     // System.out.println("Forward distance: " + range);
-                    swerveSubsystem.driveWithVision(angleSpeed, forwardSpeed);
                     break;
                 }
             }
         }
-        
+        swerveSubsystem.driveWithVision(angleSpeed, forwardSpeed);
     }
 
     @Override

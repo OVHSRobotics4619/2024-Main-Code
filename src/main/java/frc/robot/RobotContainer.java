@@ -91,8 +91,7 @@ public class RobotContainer
   // point to tag V2 code starts here
 
   private PIDController turnController = new PIDController(.1, 0, 0);
-  private PIDController forwardController = new PIDController(1, 0, 1);
-
+  private PIDController forwardController = new PIDController(0.5, 0, 0);
   private TurnToTag2 pointToTag2 = new TurnToTag2(camera, drivebase, turnController, forwardController);
 
   // CommandJoystick rotationController = new CommandJoystick(1);
@@ -178,6 +177,9 @@ public class RobotContainer
     Trigger rightTrigger = new Trigger(() -> driverXbox.getRawAxis(Constants.OIConstants.RIGHT_TRIGGER) > 0.05);
     Trigger leftTrigger = new Trigger(() -> driverXbox.getRawAxis(Constants.OIConstants.LEFT_TRIGGER) > 0.05);
 
+    Trigger funStickUp = new Trigger(() -> buttonBoard.getRawAxis(1) < 0);
+    Trigger funStickDown = new Trigger(() -> buttonBoard.getRawAxis(1) > 0);
+
 
     rightTrigger.onTrue(autoShoot);                                         // done
     
@@ -194,11 +196,19 @@ public class RobotContainer
                       .onTrue(new InstantCommand(shooter::amp))
                       .onFalse(new InstantCommand(shooter::stopAll));
 
-    new JoystickButton(driverXbox, Constants.OIConstants.A)
+    /*new JoystickButton(driverXbox, Constants.OIConstants.A)
                       .whileTrue(climb)
                       .whileFalse(hold);
 
     new JoystickButton(driverXbox, Constants.OIConstants.Y)
+                  .whileTrue(climbExtend);
+    */
+
+    funStickDown
+                      .whileTrue(climb);
+                      //.whileFalse(hold);
+
+    funStickUp
                       .whileTrue(climbExtend);
 
     new JoystickButton(driverXbox, Constants.OIConstants.R_BUMPER)          // test
@@ -207,6 +217,10 @@ public class RobotContainer
     
     new JoystickButton(driverXbox, Constants.OIConstants.X)
                       .whileTrue(aprilPositionEstimation);                 // test
+    
+    new JoystickButton(buttonBoard, Constants.buttonBoard.B)              // done
+                      .onTrue(new InstantCommand(flap::enableFlap))
+                      .onFalse(new InstantCommand(flap::disableFlap));
 
   }
 
