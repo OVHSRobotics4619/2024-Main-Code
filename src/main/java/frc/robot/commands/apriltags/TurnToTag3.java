@@ -18,8 +18,9 @@ public class TurnToTag3 extends Command {
 
     private final PhotonCamera camera;
     private final SwerveSubsystem swerveSubsystem;
-    private final PIDController angle;
-    private final PIDController forward;
+
+    private PIDController angle;
+    private PIDController forward;
 
     private double previousForwardSpeed;
 
@@ -28,11 +29,12 @@ public class TurnToTag3 extends Command {
     private Timer driveTime = new Timer();
     private double Time;
 
-    public TurnToTag3(PhotonCamera camera, SwerveSubsystem swerveSubsystem, PIDController angle, PIDController forward) {
+    public TurnToTag3(PhotonCamera camera, SwerveSubsystem swerveSubsystem) {
         this.camera = camera;
-        this.angle = angle;
-        this.forward = forward;
         this.swerveSubsystem = swerveSubsystem;
+        this.angle = new PIDController(.1, 0, 0);
+        this.forward = new PIDController(1, 0, 0);
+
         addRequirements(swerveSubsystem);
     }
 
@@ -70,16 +72,17 @@ public class TurnToTag3 extends Command {
                     angleSpeed = angle.calculate(mainTarget.getYaw(), 0);
                     double range = Math.sqrt(Math.pow(bestTagPose.getX(), 2) + Math.pow(bestTagPose.getY(), 2));
                     forwardSpeed = forward.calculate(range, Constants.Shooter.GOAL_RANGE_METERS);
-                    previousForwardSpeed = forwardSpeed;
 
-                    if ((Math.abs(Constants.Shooter.GOAL_RANGE_METERS - range) < 0.1) && (Math.abs(forwardSpeed) < 0.1)) {
+                    if ((Math.abs(Constants.Shooter.GOAL_RANGE_METERS - range) < 0.1) && (Math.abs(forwardSpeed) < 0.3)) {
                         endCommand = true;
                     }
+                    previousForwardSpeed = forwardSpeed;
 
                     // System.out.println("Forward speed: " + forwardSpeed);
                     // System.out.println("Forward distance: " + range);
                     break;
                 }
+                
             }
         }
         swerveSubsystem.driveWithVision(angleSpeed, forwardSpeed);

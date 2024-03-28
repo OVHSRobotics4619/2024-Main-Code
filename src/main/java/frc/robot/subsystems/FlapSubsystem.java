@@ -16,6 +16,14 @@ public class FlapSubsystem extends SubsystemBase {
     flapMotor.set(TalonSRXControlMode.PercentOutput, 0.25);
   }
 
+  public void powerFlap() {
+    flapMotor.set(TalonSRXControlMode.PercentOutput, 0.5);
+  }
+
+  public void reverseFlap() {
+    flapMotor.set(TalonSRXControlMode.PercentOutput, -0.15);
+  }
+
   public void disableFlap() {
     flapMotor.set(TalonSRXControlMode.PercentOutput, 0);
   }

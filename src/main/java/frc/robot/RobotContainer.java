@@ -90,10 +90,9 @@ public class RobotContainer
   private final Command demoShootPathCommand = new PathPlannerAuto("Shoot demo");
   
   // point to tag V2 code starts here
+  private TurnToTag3 pointToTag3 = new TurnToTag3(camera, drivebase);
 
-  private PIDController turnController = new PIDController(.1, 0, 0);
-  private PIDController forwardController = new PIDController(1, 0, 0);
-  private TurnToTag3 pointToTag3 = new TurnToTag3(camera, drivebase, turnController, forwardController);
+  private AlignShoot alignShoot = new AlignShoot(drivebase, shooter, camera);
 
   // CommandJoystick rotationController = new CommandJoystick(1);
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -181,19 +180,26 @@ public class RobotContainer
     Trigger funStickUp = new Trigger(() -> buttonBoard.getRawAxis(1) < 0);
     Trigger funStickDown = new Trigger(() -> buttonBoard.getRawAxis(1) > 0);
 
+    Trigger buttonBoardL2 = new Trigger(() -> buttonBoard.getRawAxis(2) > 0);
+    Trigger buttonBoardR2 = new Trigger(() -> buttonBoard.getRawAxis(3) > 0);
 
-    rightTrigger.onTrue(autoShoot);                                         // done
+
+
+    // rightTrigger.onTrue(autoShoot);                                         // done
     
-    new JoystickButton(driverXbox, Constants.OIConstants.START)             // done
-                      .whileTrue(pointToTag3);
+    new JoystickButton(buttonBoard, Constants.buttonBoard.A)
+                      .whileTrue(autoShoot);
+
+    new JoystickButton(buttonBoard, Constants.buttonBoard.B)             // done
+                      .onTrue(alignShoot);
 
     new JoystickButton(driverXbox, Constants.OIConstants.BACK)              // done
                       .onTrue((new InstantCommand(drivebase::zeroGyro)));
 
-    leftTrigger                                                             // done
+    buttonBoardR2                                                             // done
                       .whileTrue(intake);
 
-    new JoystickButton(driverXbox, Constants.OIConstants.L_BUMPER)          // done
+    new JoystickButton(buttonBoard, Constants.buttonBoard.R1)          // done
                       .onTrue(new InstantCommand(shooter::amp))
                       .onFalse(new InstantCommand(shooter::stopAll));
 
@@ -206,21 +212,28 @@ public class RobotContainer
     */
 
     funStickDown
-                      .whileTrue(climb);
-                      //.whileFalse(hold);
+                      .whileTrue(climb)
+                      .whileFalse(hold);
 
     funStickUp
+                      .onTrue(new InstantCommand(() -> {
+                        hold.cancel();
+                        System.out.println("Hold cancelled by stick");}))
                       .whileTrue(climbExtend);
-
+    /*
     new JoystickButton(driverXbox, Constants.OIConstants.R_BUMPER)          // test
                       .whileTrue(demoPathCommand);
 
-    
     new JoystickButton(driverXbox, Constants.OIConstants.X)
                       .whileTrue(aprilPositionEstimation);                 // test
-    
-    new JoystickButton(buttonBoard, Constants.buttonBoard.B)              // done
+     */
+
+    buttonBoardL2
                       .onTrue(new InstantCommand(flap::enableFlap))
+                      .onFalse(new InstantCommand(flap::disableFlap));
+
+    new JoystickButton(buttonBoard, Constants.buttonBoard.L1)
+                      .onTrue(new InstantCommand(flap::reverseFlap))
                       .onFalse(new InstantCommand(flap::disableFlap));
 
   }
