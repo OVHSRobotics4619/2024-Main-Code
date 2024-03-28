@@ -73,8 +73,8 @@ public final class Constants
   {
     // Motor speeds on a scale of 0 to 1
     public static final double INTAKE_SPEED = 0.6;
-    public static final double OUTTAKE_SPEED = 0.8;
-    public static final double SHOOTING_SPEED = 0.8;
+    public static final double OUTTAKE_SPEED = 0.6;
+    public static final double SHOOTING_SPEED = 1;
     
     public static final double AMP_SPEED = 0.5;
 
@@ -88,7 +88,7 @@ public final class Constants
     static final public double SHOOTING_SHOOT_TIME = 1;
 
     // Distance away from apriltag robot tries to align with
-    public static final double GOAL_RANGE_METERS = 2.5;
+    public static final double GOAL_RANGE_METERS = 2.55 ;
 
 
   }
