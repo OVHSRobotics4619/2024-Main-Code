@@ -1,4 +1,4 @@
-package frc.robot.commands.apriltags;
+package frc.robot.commands.shooter;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -11,13 +11,15 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.Constants;
 
-public class TurnToTag3 extends Command {
+public class AlignShoot2 extends Command {
 
     private final PhotonCamera camera;
     private final SwerveSubsystem swerveSubsystem;
+    private final ShooterSubsystem shooterSubsystem;
 
     private PIDController angle;
     private PIDController forward;
@@ -29,13 +31,16 @@ public class TurnToTag3 extends Command {
     private Timer driveTime = new Timer();
     private double Time;
 
-    public TurnToTag3(PhotonCamera camera, SwerveSubsystem swerveSubsystem) {
+    private double endTime;
+
+    public AlignShoot2(PhotonCamera camera, SwerveSubsystem swerveSubsystem, ShooterSubsystem shooterSubsystem) {
         this.camera = camera;
         this.swerveSubsystem = swerveSubsystem;
+        this.shooterSubsystem = shooterSubsystem;
         this.angle = new PIDController(.1, 0, 0);
         this.forward = new PIDController(2.5, 0, 0);
 
-        addRequirements(swerveSubsystem);
+        addRequirements(swerveSubsystem, shooterSubsystem);
     }
 
     @Override
@@ -44,59 +49,72 @@ public class TurnToTag3 extends Command {
         driveTime.start();
 
         previousForwardSpeed = 0;
+
+        endTime = 5;
         endCommand = false;
 
-        // Initialization logic (if needed)
+        shooterSubsystem.setShoot(Constants.Shooter.SHOOTING_SPEED);
     }
 
     @Override
     public void execute() {
         Time = driveTime.get();
 
-        PhotonPipelineResult result = camera.getLatestResult();
-        double angleSpeed = 0.0;
-        double forwardSpeed = previousForwardSpeed / 2;
-        if (result.hasTargets()) {
+        if (!endCommand) {
+            PhotonPipelineResult result = camera.getLatestResult();
+            double angleSpeed = 0.0;
+            double forwardSpeed = previousForwardSpeed / 2;
+            if (result.hasTargets()) {
 
-            PhotonTrackedTarget mainTarget;
-            List<PhotonTrackedTarget>targets = result.getTargets();
-            for (PhotonTrackedTarget target : targets) 
-            {
-                int targetId = target.getFiducialId();
-                if (targetId == 4 || targetId == 7)
+                PhotonTrackedTarget mainTarget;
+                List<PhotonTrackedTarget>targets = result.getTargets();
+                for (PhotonTrackedTarget target : targets) 
                 {
+                    int targetId = target.getFiducialId();
+                    if (targetId == 4 || targetId == 7)
+                    {
 
-                    mainTarget = target;
+                        mainTarget = target;
 
-                    Transform3d bestTagPose = mainTarget.getBestCameraToTarget();
+                        Transform3d bestTagPose = mainTarget.getBestCameraToTarget();
 
-                    angleSpeed = angle.calculate(mainTarget.getYaw(), 0);
-                    double range = Math.sqrt(Math.pow(bestTagPose.getX(), 2) + Math.pow(bestTagPose.getY(), 2));
-                    forwardSpeed = forward.calculate(range, Constants.Shooter.GOAL_RANGE_METERS);
+                        Double currentAngle = mainTarget.getYaw();
+                        angleSpeed = angle.calculate(currentAngle, 0);
+                        double range = Math.sqrt(Math.pow(bestTagPose.getX(), 2) + Math.pow(bestTagPose.getY(), 2));
+                        forwardSpeed = forward.calculate(range, Constants.Shooter.GOAL_RANGE_METERS);
 
-                    if ((Math.abs(Constants.Shooter.GOAL_RANGE_METERS - range) < 0.1) && (Math.abs(forwardSpeed) < 0.3)) {
-                        endCommand = true;
+                        if ((Math.abs(currentAngle) < 10) && (Math.abs(Constants.Shooter.GOAL_RANGE_METERS - range) < 0.1) && (Math.abs(forwardSpeed) < 0.3)) {
+                            shooterSubsystem.setIntake(Constants.Shooter.OUTTAKE_SPEED);
+                            endTime = Time;
+
+                            if (endTime < Constants.Shooter.SHOOTING_RAMPUP_TIME) {
+                                endTime = Constants.Shooter.SHOOTING_RAMPUP_TIME;
+                            }
+
+                            endCommand = true;
+                        }
+                        previousForwardSpeed = forwardSpeed;
+
+                        // System.out.println("Forward speed: " + forwardSpeed);
+                        // System.out.println("Forward distance: " + range);
+                        break;
                     }
-                    previousForwardSpeed = forwardSpeed;
-
-                    // System.out.println("Forward speed: " + forwardSpeed);
-                    // System.out.println("Forward distance: " + range);
-                    break;
+                    
                 }
-                
             }
+            swerveSubsystem.driveWithVision(angleSpeed, forwardSpeed);
         }
-        swerveSubsystem.driveWithVision(angleSpeed, forwardSpeed);
     }
 
     @Override
     public void end(boolean interrupted) {
         swerveSubsystem.driveWithVision(0, 0);
+        shooterSubsystem.stopAll();
     }
 
     @Override
     public boolean isFinished() {
-        if (endCommand || (Time > 5)) {
+        if (Time > (endTime + Constants.Shooter.SHOOTING_SHOOT_TIME)) {
             System.out.println("Stopped auto shooter alignment");
             return true;
         }
