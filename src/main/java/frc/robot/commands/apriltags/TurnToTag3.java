@@ -91,7 +91,7 @@ public class TurnToTag3 extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        // Cleanup logic (if needed)
+        swerveSubsystem.driveWithVision(0, 0);
     }
 
     @Override
