@@ -95,6 +95,7 @@ public class RobotContainer
   private TurnToTag3 pointToTag3 = new TurnToTag3(camera, drivebase);
 
   private AlignShoot alignShoot = new AlignShoot(drivebase, shooter, camera);
+  private AlignShoot2 alignShoot2 = new AlignShoot2(drivebase, shooter, camera);
 
   private InstantCommand fullPoseReset = new InstantCommand(() -> drivebase.resetOdometry(new Pose2d()));
   private AutoFlap autoFlap = new AutoFlap(flap);
@@ -114,7 +115,7 @@ public class RobotContainer
   {
 
     NamedCommands.registerCommand("autoShoot", autoShoot);
-    NamedCommands.registerCommand("alignShoot", alignShoot);
+    NamedCommands.registerCommand("alignShoot", alignShoot2);
     NamedCommands.registerCommand("autoFlap", autoFlap);
     NamedCommands.registerCommand("fullPoseReset", fullPoseReset);
     // Configure the trigger bindings
@@ -200,8 +201,7 @@ public class RobotContainer
                       .whileTrue(autoShoot);
 
     new JoystickButton(buttonBoard, Constants.buttonBoard.B)             // done
-                      .whileTrue(alignShoot)
-                      .onFalse(new InstantCommand(shooter::stopAll));
+                      .whileTrue(alignShoot2);
 
     new JoystickButton(driverXbox, Constants.OIConstants.BACK)              // done
                       .onTrue((new InstantCommand(drivebase::zeroGyro)));

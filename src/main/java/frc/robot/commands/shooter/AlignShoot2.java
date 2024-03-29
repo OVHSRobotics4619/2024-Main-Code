@@ -33,7 +33,7 @@ public class AlignShoot2 extends Command {
 
     private double endTime;
 
-    public AlignShoot2(PhotonCamera camera, SwerveSubsystem swerveSubsystem, ShooterSubsystem shooterSubsystem) {
+    public AlignShoot2(SwerveSubsystem swerveSubsystem, ShooterSubsystem shooterSubsystem, PhotonCamera camera) {
         this.camera = camera;
         this.swerveSubsystem = swerveSubsystem;
         this.shooterSubsystem = shooterSubsystem;
