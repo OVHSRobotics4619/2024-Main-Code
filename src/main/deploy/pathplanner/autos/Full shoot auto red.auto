@@ -1,0 +1,56 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 15.964276151094342,
+      "y": 3.958262752475195
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Line up to shoot red"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "autoFlap"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "alignShoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Run away red"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "fullPoseReset"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
