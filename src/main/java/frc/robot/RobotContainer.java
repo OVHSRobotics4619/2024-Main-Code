@@ -200,7 +200,8 @@ public class RobotContainer
                       .whileTrue(autoShoot);
 
     new JoystickButton(buttonBoard, Constants.buttonBoard.B)             // done
-                      .whileTrue(alignShoot);
+                      .whileTrue(alignShoot)
+                      .onFalse(new InstantCommand(shooter::stopAll));
 
     new JoystickButton(driverXbox, Constants.OIConstants.BACK)              // done
                       .onTrue((new InstantCommand(drivebase::zeroGyro)));
