@@ -72,8 +72,8 @@ public final class Constants
   public static final class Shooter 
   {
     // Motor speeds on a scale of 0 to 1
-    public static final double INTAKE_SPEED = 0.6;
-    public static final double OUTTAKE_SPEED = 0.6;
+    public static final double INTAKE_SPEED = 0.7;
+    public static final double OUTTAKE_SPEED = 0.8;
     public static final double SHOOTING_SPEED = 1;
     
     public static final double AMP_SPEED = 0.5;
@@ -82,13 +82,13 @@ public final class Constants
     static final public double INTAKE_TIME = 1;
 
     // Time (seconds) for how long the shooter charges (front 2 wheels only)
-    static final public double SHOOTING_RAMPUP_TIME = 1;
+    static final public double SHOOTING_RAMPUP_TIME = 1.5;
 
     // Time (seconds) for how long the shooter shoots after charging (all 4 wheels)
-    static final public double SHOOTING_SHOOT_TIME = 1;
+    static final public double SHOOTING_SHOOT_TIME = 1.5;
 
     // Distance away from apriltag robot tries to align with
-    public static final double GOAL_RANGE_METERS = 2.55 ;
+    public static final double GOAL_RANGE_METERS = 2.3;
 
 
   }

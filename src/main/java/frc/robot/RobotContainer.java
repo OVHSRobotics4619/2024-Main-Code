@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -36,6 +37,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import frc.robot.commands.shooter.*;
+import frc.robot.commands.AutoFlap;
 import frc.robot.commands.apriltags.PositionEstimation;
 import frc.robot.commands.apriltags.TurnToTag2;
 import frc.robot.commands.apriltags.TurnToTag3;
@@ -94,6 +96,8 @@ public class RobotContainer
 
   private AlignShoot alignShoot = new AlignShoot(drivebase, shooter, camera);
 
+  private InstantCommand fullPoseReset = new InstantCommand(() -> drivebase.resetOdometry(new Pose2d()));
+  private AutoFlap autoFlap = new AutoFlap(flap);
   // CommandJoystick rotationController = new CommandJoystick(1);
   // Replace with CommandPS4Controller or CommandJoystick if needed
   CommandJoystick driverController = new CommandJoystick(2);
@@ -110,7 +114,9 @@ public class RobotContainer
   {
 
     NamedCommands.registerCommand("autoShoot", autoShoot);
-
+    NamedCommands.registerCommand("alignShoot", alignShoot);
+    NamedCommands.registerCommand("autoFlap", autoFlap);
+    NamedCommands.registerCommand("fullPoseReset", fullPoseReset);
     // Configure the trigger bindings
     configureBindings();
 
@@ -190,13 +196,19 @@ public class RobotContainer
     new JoystickButton(buttonBoard, Constants.buttonBoard.A)
                       .whileTrue(autoShoot);
 
+    rightTrigger
+                      .whileTrue(autoShoot);
+
     new JoystickButton(buttonBoard, Constants.buttonBoard.B)             // done
-                      .onTrue(alignShoot);
+                      .whileTrue(alignShoot);
 
     new JoystickButton(driverXbox, Constants.OIConstants.BACK)              // done
                       .onTrue((new InstantCommand(drivebase::zeroGyro)));
 
     buttonBoardR2                                                             // done
+                      .whileTrue(intake);
+
+    leftTrigger                                                             // done
                       .whileTrue(intake);
 
     new JoystickButton(buttonBoard, Constants.buttonBoard.R1)          // done
@@ -245,10 +257,11 @@ public class RobotContainer
    */
   public Command getAutonomousCommand()
   {
-    // An example command will be run in autonomous
-    PathPlannerAuto thisAuto = new PathPlannerAuto("Shoot demo");
+    String autoName = "Full shoot auto blue";
 
-    drivebase.resetOdometry(PathPlannerAuto.getStaringPoseFromAutoFile("Shoot demo")); 
+    PathPlannerAuto thisAuto = new PathPlannerAuto(autoName);
+
+    drivebase.resetOdometry(PathPlannerAuto.getStaringPoseFromAutoFile(autoName)); 
     return thisAuto;
   }
 

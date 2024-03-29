@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.5562248267353682,
-      "y": 1.8617511520737338
+      "x": 15.964276151094342,
+      "y": 3.958262752475195
     },
-    "rotation": 0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -14,19 +14,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Auto Path"
+            "pathName": "Line up to shoot"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": null
+            "name": "alignShoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "hAWK PATH"
+            "pathName": "Run away after shoot"
           }
         }
       ]

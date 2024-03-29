@@ -33,7 +33,7 @@ public class TurnToTag3 extends Command {
         this.camera = camera;
         this.swerveSubsystem = swerveSubsystem;
         this.angle = new PIDController(.1, 0, 0);
-        this.forward = new PIDController(1, 0, 0);
+        this.forward = new PIDController(2.5, 0, 0);
 
         addRequirements(swerveSubsystem);
     }
@@ -45,6 +45,7 @@ public class TurnToTag3 extends Command {
 
         previousForwardSpeed = 0;
         endCommand = false;
+
         // Initialization logic (if needed)
     }
 
