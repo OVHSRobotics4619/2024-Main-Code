@@ -12,6 +12,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private VictorSPX topLeft   = new VictorSPX(12); //issues
   private VictorSPX topRight = new VictorSPX(13);//done
 
+  // Mr. Grumet is a meanie head 
 
   private VictorSPX bottomRight = new VictorSPX(15); //done
   private VictorSPX bottomLeft = new VictorSPX(14); // done
