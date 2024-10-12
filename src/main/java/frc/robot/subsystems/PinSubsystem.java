@@ -20,3 +20,4 @@ public class PinSubsystem extends SubsystemBase {
     pinMotor.set(TalonSRXControlMode.PercentOutput, 0);
   }
 }
+// no idea what to write rn
